@@ -3,7 +3,7 @@ package jp.gr.java_conf.sora.qrcodereader;
 import com.journeyapps.barcodescanner.CaptureActivity;
 
 /**
- * Created by gen56 on 2018/03/10.
+ * 読み取り画面方向の制御用クラス
  */
 
 public class CaptureActivityAnyOrientation extends CaptureActivity {
