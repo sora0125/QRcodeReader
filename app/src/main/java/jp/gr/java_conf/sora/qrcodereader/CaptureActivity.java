@@ -24,8 +24,10 @@ public class CaptureActivity extends AppCompatActivity {
         integrator.setCaptureActivity(CaptureActivityAnyOrientation.class);
         // 画面の回転に対応する
         integrator.setOrientationLocked(true);
-        // 読み取る対象をセット（QRコード）
+        // 読み取る対象を指定（QRコード）
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        // 読み取り時の音を出さない
+        integrator.setBeepEnabled(false);
         // スキャン画面を起動
         integrator.initiateScan();
     }

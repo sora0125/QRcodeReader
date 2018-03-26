@@ -13,11 +13,7 @@
             android:name=".QRscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_name"
-            android:theme="@style/FullscreenTheme">
-            <!--intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter-->
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".CaptureActivity"

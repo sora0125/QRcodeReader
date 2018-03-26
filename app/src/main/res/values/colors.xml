@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2582eb</color>
-    <color name="colorPrimaryDark">#15e2ed</color>
-    <color name="colorAccent">#ffffff</color>
+    <!--activity_qrscreen.xml-->
+    <color name="qrScreenBackground">#ffffff</color>
+    <color name="qrScreenTextColor">#3867e9</color>
 
-    <color name="black_overlay">#66f9f9f9</color>
+    <!--styles.xml-->
+    <color name="colorPrimary">#2582eb</color>
+    <color name="colorPrimaryDark">#1035ac</color>
+    <color name="colorAccent">#245fbb</color>
 </resources>

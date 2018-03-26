@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">QRコードリーダー</string>
+    <string name="app_name">QRｺｰﾄﾞﾘｰﾀﾞｰ</string>
 
     <string name="title_name">読み取り結果</string>
-    <string name="dummy_content">読み取った情報を表示します</string>
 </resources>
