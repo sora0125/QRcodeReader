@@ -1,9 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/qrScreenBackground"
-    tools:context="jp.gr.java_conf.sora.qrcodereader.QRscreenActivity">
+    tools:context="jp.gr.java_conf.sora.qrcodereader.QRscreenActivity"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textViewScannedData"
@@ -14,4 +15,10 @@
         android:textSize="20sp"
         android:autoLink="all"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/textViewPrivacyPolicy"
+        android:gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="54dp" />
+
+</LinearLayout>

@@ -17,7 +17,7 @@ public class CaptureActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG,"onCreate Start");
+        // Log.d(TAG,"onCreate Start");
         super.onCreate(savedInstanceState);
         IntentIntegrator integrator = new IntentIntegrator(this);
         // 独自アクティビティクラスを読み込む
@@ -34,23 +34,23 @@ public class CaptureActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data ){
-        Log.d(TAG,"onActivityResult Start");
-        Log.d(TAG,"requestCode" + requestCode + "resultCode" + resultCode + " data:" + data);
+        // Log.d(TAG,"onActivityResult Start");
+        // Log.d(TAG,"requestCode" + requestCode + "resultCode" + resultCode + " data:" + data);
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         // nullの場合
         if (intentResult == null) {
-            Log.d(TAG,"Weird");
+            // Log.d(TAG,"Weird");
             super.onActivityResult(requestCode, resultCode, data);
             return;
         }
 
         if (intentResult.getContents() == null) {
             // 戻るボタンをタップした場合
-            Log.d(TAG, "Cancelled Scan");
+            // Log.d(TAG, "Cancelled Scan");
             finish();
         }else {
             // カメラで読み取った情報をラベルに表示
-            Log.d(TAG, "Scanned");
+            // Log.d(TAG, "Scanned");
             Intent i = new Intent(this, jp.gr.java_conf.sora.qrcodereader.QRscreenActivity.class);
             i.putExtra("scanStr", intentResult.getContents().toString());
             // 読み取り結果画面を表示
