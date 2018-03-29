@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 
 /**
  * 読み取り結果画面
@@ -18,6 +21,7 @@ import android.widget.TextView;
 public class QRscreenActivity extends AppCompatActivity {
 
     private static final String TAG = QRscreenActivity.class.getSimpleName();
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,11 @@ public class QRscreenActivity extends AppCompatActivity {
         textViewPrivacyPolicy.setMovementMethod(mMethod);
         CharSequence link = fromHtml(htmlUrl);
         textViewPrivacyPolicy.setText(link);
+
+        // AdMob
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     /**
