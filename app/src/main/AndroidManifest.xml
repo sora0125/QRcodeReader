@@ -36,6 +36,9 @@
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
+        <activity
+            android:name=".WebViewActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package jp.gr.java_conf.sora.qrcodereader;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +10,12 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.webkit.WebView;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -28,6 +34,16 @@ public class QRscreenActivity extends AppCompatActivity {
         // Log.d(TAG,"onCreate Start");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrscreen);
+
+        // ツールバーをアクションバーとしてセット
+        Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
+//        setSupportActionBar(toolbar);
+
+        // タイトルを指定
+        toolbar.setTitle("読み取り結果");
+
+
+        setSupportActionBar(toolbar);
 
         Intent i = this.getIntent();
         // インテントから読み取った文字列を取得
@@ -49,6 +65,44 @@ public class QRscreenActivity extends AppCompatActivity {
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+    }
+
+    /**
+     * ツールバーのメニュー
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem privacyPolicy = menu.findItem(R.id.action_privacy_policy);
+
+//        privacyPolicy.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                // 遷移先画面をセット
+//                Intent i = new Intent(QRscreenActivity.this, jp.gr.java_conf.sora.qrcodereader.WebViewActivity.class);
+//                startActivity(i);
+//                finish();
+//                return false;
+//            }
+//        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_history:
+                return super.onOptionsItemSelected(item);
+            case R.id.action_privacy_policy:
+                Toast toast = Toast.makeText(QRscreenActivity.this, "プライバシーポリシーへ遷移します",Toast.LENGTH_LONG);
+                toast.show();
+                Intent i = new Intent(QRscreenActivity.this, jp.gr.java_conf.sora.qrcodereader.WebViewActivity.class);
+                startActivity(i);
+                finish();
+                return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
     }
 
     /**

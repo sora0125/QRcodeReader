@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,12 +8,25 @@
     tools:context="jp.gr.java_conf.sora.qrcodereader.QRscreenActivity"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:theme="@style/ToolBarTheme"
+        android:minHeight="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"/>
+
     <TextView
         android:id="@+id/textViewScannedData"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:autoLink="all" />
+        android:layout_height="51dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="47dp"
+        android:autoLink="all"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textViewPrivacyPolicy"
@@ -21,7 +35,6 @@
         android:textSize="15sp"
         android:gravity="end"
         android:layout_above="@+id/adView"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
 
     <com.google.android.gms.ads.AdView
