@@ -10,8 +10,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 
 open class WebViewActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_privacy_policy)
 
         val myWebView: WebView = findViewById(R.id.webView_policy)

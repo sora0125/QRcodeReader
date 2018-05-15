@@ -2,6 +2,8 @@ package jp.gr.java_conf.sora.qrcodereader;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -20,6 +22,9 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 
 /**
  * 読み取り結果画面
@@ -28,6 +33,7 @@ public class QRscreenActivity extends AppCompatActivity {
 
     private static final String TAG = QRscreenActivity.class.getSimpleName();
     private AdView mAdView;
+    private QRcodeDatabaseHelper helper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +42,7 @@ public class QRscreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qrscreen);
 
         // ツールバーをアクションバーとしてセット
-        Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
-//        setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
         // タイトルを指定
         toolbar.setTitle("読み取り結果");
@@ -51,15 +56,40 @@ public class QRscreenActivity extends AppCompatActivity {
         TextView textViewScannedData = (TextView) findViewById(R.id.textViewScannedData);
         textViewScannedData.setText(scanStr);
 
-        // プライバシーポリシーへのリンク
-        String url = "https://sites.google.com/view/sora0125-privacy-policy/";
-        String htmlUrl = "<a href=\"" + url + "\">プライバシーポリシー</a>";
+        StackTraceElement ste = Thread.currentThread().getStackTrace()[3];
+        if (ste.getClassName().equals("CaptureActivity"))  {
+            helper = new QRcodeDatabaseHelper(this);
 
-        TextView textViewPrivacyPolicy = (TextView) findViewById(R.id.textViewPrivacyPolicy);
-        MovementMethod mMethod = LinkMovementMethod.getInstance();
-        textViewPrivacyPolicy.setMovementMethod(mMethod);
-        CharSequence link = fromHtml(htmlUrl);
-        textViewPrivacyPolicy.setText(link);
+            Calendar cl = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+            SQLiteDatabase db = helper.getWritableDatabase();
+            db.beginTransaction();
+            try {
+                String strSQL = "INSERT INTO history(url, date) VALUES('" + scanStr + "','" + df.format(cl.getTime()) + "')";
+                db.execSQL(strSQL);
+                db.setTransactionSuccessful();
+                Toast toast = Toast.makeText(this, "DB登録処理成功", Toast.LENGTH_LONG);
+                toast.show();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Toast toast = Toast.makeText(this, "DB登録処理失敗", Toast.LENGTH_LONG);
+                toast.show();
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
+
+        // プライバシーポリシーへのリンク
+//        String url = "https://sites.google.com/view/sora0125-privacy-policy/";
+//        String htmlUrl = "<a href=\"" + url + "\">プライバシーポリシー</a>";
+//
+//        TextView textViewPrivacyPolicy = (TextView) findViewById(R.id.textViewPrivacyPolicy);
+//        MovementMethod mMethod = LinkMovementMethod.getInstance();
+//        textViewPrivacyPolicy.setMovementMethod(mMethod);
+//        CharSequence link = fromHtml(htmlUrl);
+//        textViewPrivacyPolicy.setText(link);
 
         // AdMob
         mAdView = (AdView) findViewById(R.id.adView);
@@ -73,31 +103,27 @@ public class QRscreenActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem privacyPolicy = menu.findItem(R.id.action_privacy_policy);
-
-//        privacyPolicy.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                // 遷移先画面をセット
-//                Intent i = new Intent(QRscreenActivity.this, jp.gr.java_conf.sora.qrcodereader.WebViewActivity.class);
-//                startActivity(i);
-//                finish();
-//                return false;
-//            }
-//        });
         return true;
     }
 
+    /**
+     * オプションメニューの処理
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // メニュー：履歴
             case R.id.action_history:
-                return super.onOptionsItemSelected(item);
+                Intent intentHistory = new Intent(QRscreenActivity.this, jp.gr.java_conf.sora.qrcodereader.HistoryActivity.class);
+                startActivity(intentHistory);
+                finish();
+                return true;
+                // メニュー：プライバシーポリシー
             case R.id.action_privacy_policy:
-                Toast toast = Toast.makeText(QRscreenActivity.this, "プライバシーポリシーへ遷移します",Toast.LENGTH_LONG);
-                toast.show();
-                Intent i = new Intent(QRscreenActivity.this, jp.gr.java_conf.sora.qrcodereader.WebViewActivity.class);
-                startActivity(i);
+//                Toast toast = Toast.makeText(QRscreenActivity.this, "プライバシーポリシーへ遷移します",Toast.LENGTH_LONG);
+//                toast.show();
+                Intent intentPrivacyPolicy = new Intent(QRscreenActivity.this, jp.gr.java_conf.sora.qrcodereader.WebViewActivity.class);
+                startActivity(intentPrivacyPolicy);
                 finish();
                 return true;
                 default:
