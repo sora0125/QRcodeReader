@@ -8,13 +8,13 @@ import android.util.Log;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-/**
- * 読み取り画面クラス
- */
-
 public class CaptureActivity extends AppCompatActivity {
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
+    /**
+     *  MethodName : onCreate
+     *  Summary    : QRコードスキャン画面を起動する
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Log.d(TAG,"onCreate Start");
@@ -32,6 +32,10 @@ public class CaptureActivity extends AppCompatActivity {
         integrator.initiateScan();
     }
 
+    /**
+     *  MethodName : onActivityResult
+     *  Summary    : 読み取った情報をインテントにセットし、読み取り結果画面に遷移する
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data ){
         // Log.d(TAG,"onActivityResult Start");
@@ -49,13 +53,14 @@ public class CaptureActivity extends AppCompatActivity {
             // Log.d(TAG, "Cancelled Scan");
             finish();
         }else {
-            // カメラで読み取った情報をラベルに表示
+            // カメラで読み取った情報をインテントにセット
             // Log.d(TAG, "Scanned");
             Intent i = new Intent(this, jp.gr.java_conf.sora.qrcodereader.QRscreenActivity.class);
-            i.putExtra("scanStr", intentResult.getContents().toString());
-            // 読み取り結果画面を表示
+            i.putExtra("scanStr", intentResult.getContents());
+            // DB登録処理実行のフラグ
+            i.putExtra("moveFlg", "1");
+            // 読み取り結果画面に遷移
             startActivity(i);
-            // この画面を終了
             finish();
         }
     }

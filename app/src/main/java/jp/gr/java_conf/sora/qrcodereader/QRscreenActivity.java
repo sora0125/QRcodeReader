@@ -1,20 +1,15 @@
 package jp.gr.java_conf.sora.qrcodereader;
 
-import android.content.ClipData;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
@@ -23,7 +18,9 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -35,6 +32,10 @@ public class QRscreenActivity extends AppCompatActivity {
     private AdView mAdView;
     private QRcodeDatabaseHelper helper = null;
 
+    /**
+     *  MethodName : onCreate
+     *  Summary    : リストの項目のレイアウトを設定する
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Log.d(TAG,"onCreate Start");
@@ -43,31 +44,35 @@ public class QRscreenActivity extends AppCompatActivity {
 
         // ツールバーをアクションバーとしてセット
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-
         // タイトルを指定
         toolbar.setTitle("読み取り結果");
-
-
+        // ツールバーをアクションバーとして設定
         setSupportActionBar(toolbar);
 
         Intent i = this.getIntent();
         // インテントから読み取った文字列を取得
         String scanStr = i.getStringExtra("scanStr");
-        TextView textViewScannedData = (TextView) findViewById(R.id.textViewScannedData);
+        TextView textViewScannedData = findViewById(R.id.textViewScannedData);
         textViewScannedData.setText(scanStr);
 
-        StackTraceElement ste = Thread.currentThread().getStackTrace()[3];
-        if (ste.getClassName().equals("CaptureActivity"))  {
+        // DB登録するためのフラグを取得
+        String moveFlg = i.getStringExtra("moveFlg");
+        // フラグが立っていたらDBへ登録処理を実行
+        if ("1".equals(moveFlg)) {
             helper = new QRcodeDatabaseHelper(this);
 
+            //日付のフォーマットを設定
             Calendar cl = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
             SQLiteDatabase db = helper.getWritableDatabase();
+            // トランザクション開始
             db.beginTransaction();
             try {
+                //SQL文を作成し、クエリを実行する
                 String strSQL = "INSERT INTO history(url, date) VALUES('" + scanStr + "','" + df.format(cl.getTime()) + "')";
                 db.execSQL(strSQL);
+                // 成功フラグを立てる
                 db.setTransactionSuccessful();
                 Toast toast = Toast.makeText(this, "DB登録処理成功", Toast.LENGTH_LONG);
                 toast.show();
@@ -76,29 +81,53 @@ public class QRscreenActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(this, "DB登録処理失敗", Toast.LENGTH_LONG);
                 toast.show();
             } finally {
+                // トランザクション終了
                 db.endTransaction();
+                db.close();
+            }
+        } else {
+            SQLiteOpenHelper helper = new QRcodeDatabaseHelper(this);
+            SQLiteDatabase db = helper.getReadableDatabase();
+            Cursor cs = null;
+
+            try {
+                // 検索するカラムをセット
+                String[] cols = {"url", "date"};
+                // SQLを実行
+                cs = db.query("history", cols, null, null, null,
+                        null,null, null);
+
+                // 取得結果の先頭に移動
+                Boolean eol = cs.moveToFirst();
+                if (eol) {
+                    // 取得結果の末尾に移動
+                    cs.moveToLast();
+                    String strUrl = cs.getString(0);
+                    // 取得データをセット
+                    textViewScannedData.setText(strUrl);
+
+                } else {
+                    Toast.makeText(this, "データがありません", Toast.LENGTH_LONG).show();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Toast toast = Toast.makeText(this, "DB検索処理失敗", Toast.LENGTH_LONG);
+                toast.show();
+            } finally {
+                cs.close();
                 db.close();
             }
         }
 
-        // プライバシーポリシーへのリンク
-//        String url = "https://sites.google.com/view/sora0125-privacy-policy/";
-//        String htmlUrl = "<a href=\"" + url + "\">プライバシーポリシー</a>";
-//
-//        TextView textViewPrivacyPolicy = (TextView) findViewById(R.id.textViewPrivacyPolicy);
-//        MovementMethod mMethod = LinkMovementMethod.getInstance();
-//        textViewPrivacyPolicy.setMovementMethod(mMethod);
-//        CharSequence link = fromHtml(htmlUrl);
-//        textViewPrivacyPolicy.setText(link);
-
-        // AdMob
-        mAdView = (AdView) findViewById(R.id.adView);
+        // AdMobを設定
+        mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
 
     /**
-     * ツールバーのメニュー
+     *  MethodName : onCreateOptionsMenu
+     *  Summary    : メニューレイアウトをインフレートする
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,7 +136,8 @@ public class QRscreenActivity extends AppCompatActivity {
     }
 
     /**
-     * オプションメニューの処理
+     *  MethodName : onOptionsItemSelected
+     *  Summary    : オプションメニューのリストタップ時にそれぞれの画面に遷移する
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -132,7 +162,8 @@ public class QRscreenActivity extends AppCompatActivity {
     }
 
     /**
-     * バックキータップ時の処理
+     *  MethodName : onKeyDown
+     *  Summary    : バックキータップ時に画面遷移する
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -149,20 +180,5 @@ public class QRscreenActivity extends AppCompatActivity {
         }
         // Log.d(TAG,"onKeyDown Failed");
         return false;
-    }
-
-    /**
-     * ハイパーリンク化メソッド
-     */
-    @SuppressWarnings("deprecation")
-    public static Spanned fromHtml(String url){
-        Spanned spanned;
-        // VersionがNougat（API Level 24）以上か
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            spanned = Html.fromHtml(url,Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            spanned = Html.fromHtml(url); //API Level 24以上では非推奨
-        }
-        return spanned;
     }
 }
