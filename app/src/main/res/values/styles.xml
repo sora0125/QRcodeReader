@@ -10,6 +10,7 @@
 
     <style name="ToolBarTheme" parent="Theme.AppCompat">
         <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

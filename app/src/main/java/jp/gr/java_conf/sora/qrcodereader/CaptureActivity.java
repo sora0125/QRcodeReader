@@ -21,7 +21,7 @@ public class CaptureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         IntentIntegrator integrator = new IntentIntegrator(this);
         // 独自アクティビティクラスを読み込む
-        integrator.setCaptureActivity(CaptureActivityAnyOrientation.class);
+        integrator.setCaptureActivity(ToolbarCaptureActivity.class);
         // 画面の回転に対応する
         integrator.setOrientationLocked(false);
         // 読み取る対象を指定（QRコード）

@@ -5,10 +5,14 @@ import android.database.Cursor
 import android.database.SQLException
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.Toolbar
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.widget.ListView
 import android.widget.Toast
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+
 
 class HistoryActivity : AppCompatActivity() {
     private  var historyList: ArrayList<HistoryData> = arrayListOf()
@@ -21,7 +25,20 @@ class HistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
-        var helper = QRcodeDatabaseHelper(this)
+        // ツールバーをアクションバーとしてセット
+        val toolbar: Toolbar = findViewById(R.id.tool_bar_history)
+        // タイトルを指定
+        toolbar.title = "履歴"
+
+        // ツールバーをアクションバーとして設定
+        setSupportActionBar(toolbar)
+
+        // AdMobを設定
+        val mAdView = findViewById<AdView>(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+
+        val helper = QRcodeDatabaseHelper(this)
         val db = helper.readableDatabase
         var cs: Cursor? = null
 
@@ -64,9 +81,16 @@ class HistoryActivity : AppCompatActivity() {
      */
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // 遷移先画面をセット
-            val i = Intent(this@HistoryActivity, QRscreenActivity::class.java)
-            startActivity(i)
+            // 遷移フラグがあればスキャン画面へ遷移
+            val getIntent = this.intent
+            val scanStr = getIntent.getStringExtra("moveFlg")
+            if ("1" == scanStr) {
+                val intent = Intent(this@HistoryActivity, CaptureActivity::class.java)
+                startActivity(intent)
+            } else {
+                val intent = Intent(this@HistoryActivity, QRscreenActivity::class.java)
+                startActivity(intent)
+            }
             finish()
             return true
         }

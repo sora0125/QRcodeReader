@@ -18,9 +18,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 
 /**
@@ -43,11 +41,14 @@ public class QRscreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qrscreen);
 
         // ツールバーをアクションバーとしてセット
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar toolbar = findViewById(R.id.tool_bar_qrscreen);
         // タイトルを指定
         toolbar.setTitle("読み取り結果");
         // ツールバーをアクションバーとして設定
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         Intent i = this.getIntent();
         // インテントから読み取った文字列を取得
@@ -180,5 +181,11 @@ public class QRscreenActivity extends AppCompatActivity {
         }
         // Log.d(TAG,"onKeyDown Failed");
         return false;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

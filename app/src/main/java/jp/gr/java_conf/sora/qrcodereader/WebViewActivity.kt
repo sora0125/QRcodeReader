@@ -3,9 +3,12 @@ package jp.gr.java_conf.sora.qrcodereader
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.KeyEvent
 import android.webkit.WebChromeClient
 import android.webkit.WebView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 
 open class WebViewActivity : AppCompatActivity() {
     /**
@@ -15,6 +18,19 @@ open class WebViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_privacy_policy)
+
+        // ツールバーをアクションバーとしてセット
+        val toolbar: Toolbar = findViewById(R.id.tool_bar_privacy_policy)
+        // タイトルを指定
+        toolbar.title = "プライバシーポリシー"
+
+        // ツールバーをアクションバーとして設定
+        setSupportActionBar(toolbar)
+
+        // AdMobを設定
+        val mAdView = findViewById<AdView>(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
         val myWebView: WebView = findViewById(R.id.webView_policy)
         // リンクタップ時に標準ブラウザを起動させないようにする

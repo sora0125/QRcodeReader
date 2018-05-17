@@ -16,7 +16,7 @@
             android:name=".QRscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_name"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".CaptureActivity"
             android:screenOrientation="fullSensor"
@@ -34,9 +34,11 @@
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
-        <activity android:name=".WebViewActivity"></activity>
-        <activity android:name=".HistoryActivity"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".WebViewActivity"/>
+        <activity android:name=".HistoryActivity"/>
+        <activity android:name=".ToolbarCaptureActivity"/>
+
     </application>
 
 </manifest>
