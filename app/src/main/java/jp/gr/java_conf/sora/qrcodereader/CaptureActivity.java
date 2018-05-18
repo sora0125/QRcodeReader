@@ -51,7 +51,7 @@ public class CaptureActivity extends AppCompatActivity {
         if (intentResult.getContents() == null) {
             // 戻るボタンをタップした場合
             // Log.d(TAG, "Cancelled Scan");
-            finish();
+            finishAndRemoveTask();
         }else {
             // カメラで読み取った情報をインテントにセット
             // Log.d(TAG, "Scanned");

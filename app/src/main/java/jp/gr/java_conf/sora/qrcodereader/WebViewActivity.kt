@@ -26,6 +26,9 @@ open class WebViewActivity : AppCompatActivity() {
 
         // ツールバーをアクションバーとして設定
         setSupportActionBar(toolbar)
+        // 戻るボタンを表示
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
 
         // AdMobを設定
         val mAdView = findViewById<AdView>(R.id.adView)
@@ -53,6 +56,18 @@ open class WebViewActivity : AppCompatActivity() {
             return true
         }
         return false
+    }
+
+    /**
+     *  MethodName : onSupportNavigateUp
+     *  Summary    : 戻るボタンタップ時に画面遷移する
+     */
+    override fun onSupportNavigateUp(): Boolean {
+        // 遷移先画面をセット
+        val i = Intent(this, QRscreenActivity::class.java)
+        startActivity(i)
+        finish()
+        return true
     }
 
 }

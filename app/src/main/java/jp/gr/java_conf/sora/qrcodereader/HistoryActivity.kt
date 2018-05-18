@@ -19,7 +19,7 @@ class HistoryActivity : AppCompatActivity() {
 
     /**
      *  MethodName : onCreate
-     *  Summary    : webviewでプライバシーポリシーページを表示する
+     *  Summary    : DBから履歴を取得し、リスト表示する
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +32,9 @@ class HistoryActivity : AppCompatActivity() {
 
         // ツールバーをアクションバーとして設定
         setSupportActionBar(toolbar)
+        // 戻るボタンを表示
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
 
         // AdMobを設定
         val mAdView = findViewById<AdView>(R.id.adView)
@@ -103,19 +106,18 @@ class HistoryActivity : AppCompatActivity() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-        // メニュー：履歴
-            R.id.action_history -> {
-                val intentHistory =
-                        Intent(this@HistoryActivity, jp.gr.java_conf.sora.qrcodereader.HistoryActivity::class.java)
-                startActivity(intentHistory)
-                finish()
-                return true
-            }
-        // メニュー：プライバシーポリシー
-            R.id.action_privacy_policy -> {
-                val intentPrivacyPolicy =
-                        Intent(this@HistoryActivity, jp.gr.java_conf.sora.qrcodereader.WebViewActivity::class.java)
-                startActivity(intentPrivacyPolicy)
+        // 戻るボタン
+            android.R.id.home -> {
+                // 遷移フラグがあればスキャン画面へ遷移
+                val getIntent = this.intent
+                val scanStr = getIntent.getStringExtra("moveFlg")
+                if ("1" == scanStr) {
+                    val intent = Intent(this@HistoryActivity, CaptureActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(this@HistoryActivity, QRscreenActivity::class.java)
+                    startActivity(intent)
+                }
                 finish()
                 return true
             }

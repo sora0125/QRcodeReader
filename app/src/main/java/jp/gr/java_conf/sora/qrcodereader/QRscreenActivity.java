@@ -47,6 +47,7 @@ public class QRscreenActivity extends AppCompatActivity {
         // ツールバーをアクションバーとして設定
         setSupportActionBar(toolbar);
 
+        // 戻るボタンを表示
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -157,6 +158,12 @@ public class QRscreenActivity extends AppCompatActivity {
                 startActivity(intentPrivacyPolicy);
                 finish();
                 return true;
+            // 戻るボタン
+            case android.R.id.home:
+                Intent i = new Intent(this, jp.gr.java_conf.sora.qrcodereader.CaptureActivity.class);
+                startActivity(i);
+                finish();
+                return true;
                 default:
                     return super.onOptionsItemSelected(item);
         }
@@ -172,20 +179,12 @@ public class QRscreenActivity extends AppCompatActivity {
             // Log.d(TAG,"onKeyDown Start");
             // 遷移先画面をセット
             Intent i = new Intent(this, jp.gr.java_conf.sora.qrcodereader.CaptureActivity.class);
-            // スキャン画面を表示
             startActivity(i);
-            // 読み取り画面を終了
             finish();
             // Log.d(TAG,"onKeyDown Success");
             return true;
         }
         // Log.d(TAG,"onKeyDown Failed");
         return false;
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }
