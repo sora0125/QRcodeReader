@@ -29,11 +29,9 @@ public class ToolbarCaptureActivity extends AppCompatActivity {
         setContentView(R.layout.capture_appcompat);
         // ツールバーの設定
         Toolbar toolbar = findViewById(R.id.my_awesome_toolbar);
-        toolbar.setTitle("読み取り");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ColorDrawable drawable = new ColorDrawable(Color.argb(250, 0, 0, 0));
-//        drawable.setAlpha(0);
         getSupportActionBar().setBackgroundDrawable(drawable);
 
         // スキャンレイアウト読み込み

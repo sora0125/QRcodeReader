@@ -25,10 +25,7 @@ import java.util.Calendar;
  * 読み取り結果画面
  */
 public class QRscreenActivity extends AppCompatActivity {
-
     private static final String TAG = QRscreenActivity.class.getSimpleName();
-    private AdView mAdView;
-    private QRcodeDatabaseHelper helper = null;
 
     /**
      *  MethodName : onCreate
@@ -61,7 +58,7 @@ public class QRscreenActivity extends AppCompatActivity {
         String moveFlg = i.getStringExtra("moveFlg");
         // フラグが立っていたらDBへ登録処理を実行
         if ("1".equals(moveFlg)) {
-            helper = new QRcodeDatabaseHelper(this);
+            QRcodeDatabaseHelper helper = new QRcodeDatabaseHelper(this);
 
             //日付のフォーマットを設定
             Calendar cl = Calendar.getInstance();
@@ -76,12 +73,12 @@ public class QRscreenActivity extends AppCompatActivity {
                 db.execSQL(strSQL);
                 // 成功フラグを立てる
                 db.setTransactionSuccessful();
-                Toast toast = Toast.makeText(this, "DB登録処理成功", Toast.LENGTH_LONG);
-                toast.show();
+//                Toast toast = Toast.makeText(this, "DB登録処理成功", Toast.LENGTH_LONG);
+//                toast.show();
             } catch (SQLException e) {
                 e.printStackTrace();
-                Toast toast = Toast.makeText(this, "DB登録処理失敗", Toast.LENGTH_LONG);
-                toast.show();
+//                Toast toast = Toast.makeText(this, "DB登録処理失敗", Toast.LENGTH_LONG);
+//                toast.show();
             } finally {
                 // トランザクション終了
                 db.endTransaction();
@@ -108,21 +105,21 @@ public class QRscreenActivity extends AppCompatActivity {
                     // 取得データをセット
                     textViewScannedData.setText(strUrl);
 
-                } else {
-                    Toast.makeText(this, "データがありません", Toast.LENGTH_LONG).show();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
                 Toast toast = Toast.makeText(this, "DB検索処理失敗", Toast.LENGTH_LONG);
                 toast.show();
             } finally {
-                cs.close();
+                if (cs != null) {
+                    cs.close();
+                }
                 db.close();
             }
         }
 
         // AdMobを設定
-        mAdView = findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }

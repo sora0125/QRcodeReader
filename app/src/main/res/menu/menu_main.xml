@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_history"
-        android:title="履歴"
+        android:title="@string/menu_list_1"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_privacy_policy"
-        android:title="プライバシーポリシー"
+        android:title="@string/menu_list_2"
         app:showAsAction="never" />
 </menu>
