@@ -1,6 +1,7 @@
 /app/build/*
 /gradle/*
 /.gradle/*
+/gradle/wrapper/*
 .idea/*
 /local.properties
 /app/google-services.json
