@@ -12,6 +12,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7596372753757478~1730192643"/>
+
         <activity
             android:name=".QRscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

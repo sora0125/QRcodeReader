@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.MobileAds;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -29,6 +30,8 @@ public class CaptureActivity extends AppCompatActivity {
         integrator.setBeepEnabled(false);
         // スキャン画面を起動
         integrator.initiateScan();
+
+        MobileAds.initialize(this);
     }
 
     /**

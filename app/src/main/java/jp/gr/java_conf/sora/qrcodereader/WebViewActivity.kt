@@ -35,6 +35,7 @@ open class WebViewActivity : AppCompatActivity() {
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
+
         val myWebView: WebView = findViewById(R.id.webView_policy)
         // リンクタップ時に標準ブラウザを起動させないようにする
         myWebView.webChromeClient = WebChromeClient()
