@@ -28,12 +28,12 @@ class HistoryActivity : AppCompatActivity() {
         // ツールバーをアクションバーとしてセット
         val toolbar: Toolbar = findViewById(R.id.tool_bar_history)
         // タイトルを指定
-        toolbar.title = "履歴"
+        toolbar.title = getString(R.string.history_toolbar_title)
 
         // ツールバーをアクションバーとして設定
         setSupportActionBar(toolbar)
         // 戻るボタンを表示
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         // AdMobを設定

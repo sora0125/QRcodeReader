@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
+import androidx.core.text.HtmlCompat
 
 
 class HistoryAdapter(context: Context, private val historyList: List<HistoryData>):
@@ -20,21 +21,16 @@ class HistoryAdapter(context: Context, private val historyList: List<HistoryData
      *  MethodName : getView
      *  Summary    : リストの項目のレイアウトを設定する
      */
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         // ViewHolderパターン
-        var view = convertView
+        var view = convertView!!
         var holder = HistoryViewHolder()
 
-        if (convertView == null) {
-            view = layoutInflater.inflate(android.R.layout.simple_list_item_2, parent, false)
-            holder.dateView = view?.findViewById(android.R.id.text1)
-            holder.urlView = view?.findViewById(android.R.id.text2)
-            view?.tag = holder
+        view = layoutInflater.inflate(android.R.layout.simple_list_item_2, parent, false)
+        holder.dateView = view?.findViewById(android.R.id.text1)
+        holder.urlView = view?.findViewById(android.R.id.text2)
+        view?.tag = holder
 
-        } else {
-            holder = view!!.tag as HistoryViewHolder
-
-        }
 
         // URLのリンク作成
         val mMethod = LinkMovementMethod.getInstance()
@@ -58,10 +54,10 @@ class HistoryAdapter(context: Context, private val historyList: List<HistoryData
     private fun fromHtml(url: String): Spanned {
         val spanned: Spanned
         // VersionがNougat（API Level 24）以上か
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            spanned = Html.fromHtml(url, Html.FROM_HTML_MODE_LEGACY)
+        spanned = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            Html.fromHtml(url, Html.FROM_HTML_MODE_LEGACY)
         } else {
-            spanned = Html.fromHtml(url) //API Level 24以上では非推奨
+            HtmlCompat.fromHtml(url, HtmlCompat.FROM_HTML_MODE_COMPACT)
         }
         return spanned
     }

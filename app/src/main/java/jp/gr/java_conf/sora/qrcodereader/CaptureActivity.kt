@@ -55,9 +55,9 @@ open class CaptureActivity : AppCompatActivity() {
             // カメラで読み取った情報をインテントにセット
             // Log.d(TAG, "Scanned");
             val i = Intent(this, jp.gr.java_conf.sora.qrcodereader.QRscreenActivity::class.java)
-            i.putExtra("scanStr", intentResult.contents)
+            i.putExtra(INTENT_EXTRA_SCAN_STRING, intentResult.contents)
             // DB登録処理実行のフラグ
-            i.putExtra("moveFlg", "1")
+            i.putExtra(INTENT_EXTRA_MOVE_FLG, INTENT_EXTRA_MOVE_FLG_VALUE)
             // 読み取り結果画面に遷移
             startActivity(i)
             finish()
@@ -66,5 +66,8 @@ open class CaptureActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = CaptureActivity::class.java.simpleName
+        private const val INTENT_EXTRA_SCAN_STRING = "scanStr"
+        private const val INTENT_EXTRA_MOVE_FLG = "moveFlg"
+        private const val INTENT_EXTRA_MOVE_FLG_VALUE = 1
     }
 }

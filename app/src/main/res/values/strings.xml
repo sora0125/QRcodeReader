@@ -1,12 +1,18 @@
 <resources>
     <!--全体-->
     <string name="app_name">QRｺｰﾄﾞﾘｰﾀﾞｰ</string>
+
     <!--読み取り画面-->
     <string name="title_name">読み取り結果</string>
     <string name="menu_name">履歴</string>
+
     <!--AdMob-->
     <string name="banner_ad_unit_id">ca-app-pub-7596372753757478/6452036281</string>
+
     <!--オプションメニュー-->
     <string name="menu_list_1">履歴</string>
     <string name="menu_list_2">プライバシーポリシー</string>
+
+    <!--履歴画面-->
+    <string name="history_toolbar_title">履歴</string>
 </resources>
