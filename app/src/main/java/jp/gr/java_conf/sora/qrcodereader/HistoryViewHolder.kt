@@ -3,8 +3,7 @@ package jp.gr.java_conf.sora.qrcodereader
 import android.widget.TextView
 
 /**
- * Class Name : HistoryViewHolder
- * summary    : データクラス
+ * viewholderの定義クラス
  */
 class HistoryViewHolder {
     var urlView: TextView? = null

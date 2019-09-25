@@ -15,4 +15,8 @@
 
     <!--履歴画面-->
     <string name="history_toolbar_title">履歴</string>
+
+    <!--プライバシーポリシー画面-->
+    <string name="privacy_policy_title">プライバシーポリシー</string>
+    <string name="privacy_policy_url">https://sites.google.com/view/sora0125-privacy-policy/</string>
 </resources>

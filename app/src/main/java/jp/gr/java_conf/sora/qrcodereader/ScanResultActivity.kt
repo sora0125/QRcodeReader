@@ -3,11 +3,9 @@ package jp.gr.java_conf.sora.qrcodereader
 import android.content.Intent
 import android.database.Cursor
 import android.database.SQLException
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -18,65 +16,60 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.*
 
 
 /**
  * 読み取り結果画面
  */
-class QRscreenActivity : AppCompatActivity() {
+class ScanResultActivity : AppCompatActivity() {
+    private val TAG = ScanResultActivity::class.java.simpleName
 
-    /**
-     * MethodName : onCreate
-     * Summary    : リストの項目のレイアウトを設定する
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Log.d(TAG,"onCreate Start");
+        Log.d(TAG,"onCreate Start")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrscreen)
 
         // ツールバーをアクションバーとしてセット
         val toolbar = findViewById<Toolbar>(R.id.tool_bar_qrscreen)
         // タイトルを指定
-        toolbar.title = "読み取り結果"
+        toolbar.title = getString(R.string.title_name)
         // ツールバーをアクションバーとして設定
         setSupportActionBar(toolbar)
 
         // 戻るボタンを表示
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-        val i = this.intent
+        val intent = this.intent
         // インテントから読み取った文字列を取得
-        val scanStr = i.getStringExtra("scanStr")
+        val scanStr = intent.getStringExtra(INTENT_EXTRA_SCAN_STRING) ?: ""
         val textViewScannedData = findViewById<TextView>(R.id.textViewScannedData)
         textViewScannedData.text = scanStr
 
         // DB登録するためのフラグを取得
-        val moveFlg = i.getStringExtra("moveFlg")
+        val saveFlg = intent.getBooleanExtra(INTENT_EXTRA_SAVE_FLG, false)
         // フラグが立っていたらDBへ登録処理を実行
-        if ("1" == moveFlg) {
-            val helper = QRcodeDatabaseHelper(this)
-
+        if (saveFlg) {
             //日付のフォーマットを設定
-            val cl = Calendar.getInstance()
-            val df = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+            val calendar = Calendar.getInstance()
+            val format = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPANESE)
 
+            // DBのヘルパークラスのインスタンス生成
+            val helper = QRcodeDatabaseHelper(this)
             val db = helper.writableDatabase
+
             // トランザクション開始
             db.beginTransaction()
             try {
                 //SQL文を作成し、クエリを実行する
-                val strSQL = "INSERT INTO history(url, date) VALUES('" + scanStr + "','" + df.format(cl.time) + "')"
+                val strSQL = "INSERT INTO history(url, date) VALUES('" + scanStr + "','" + format.format(calendar.time) + "')"
                 db.execSQL(strSQL)
                 // 成功フラグを立てる
                 db.setTransactionSuccessful()
-                //                Toast toast = Toast.makeText(this, "DB登録処理成功", Toast.LENGTH_LONG);
-                //                toast.show();
             } catch (e: SQLException) {
                 e.printStackTrace()
-                //                Toast toast = Toast.makeText(this, "DB登録処理失敗", Toast.LENGTH_LONG);
-                //                toast.show();
+
             } finally {
                 // トランザクション終了
                 db.endTransaction()
@@ -120,8 +113,7 @@ class QRscreenActivity : AppCompatActivity() {
     }
 
     /**
-     * MethodName : onCreateOptionsMenu
-     * Summary    : メニューレイアウトをインフレートする
+     * メニューレイアウトをインフレートする
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -129,57 +121,45 @@ class QRscreenActivity : AppCompatActivity() {
     }
 
     /**
-     * MethodName : onOptionsItemSelected
-     * Summary    : オプションメニューのリストタップ時にそれぞれの画面に遷移する
+     * オプションメニューのリストタップ時にそれぞれの画面に遷移する
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             // メニュー：履歴
             R.id.action_history -> {
-                val intentHistory = Intent(this@QRscreenActivity, jp.gr.java_conf.sora.qrcodereader.HistoryActivity::class.java)
-                startActivity(intentHistory)
-                finish()
+                val intent = Intent(this, HistoryActivity::class.java)
+                startActivity(intent)
                 return true
             }
             // メニュー：プライバシーポリシー
             R.id.action_privacy_policy -> {
-                //                Toast toast = Toast.makeText(QRscreenActivity.this, "プライバシーポリシーへ遷移します",Toast.LENGTH_LONG);
-                //                toast.show();
-                val intentPrivacyPolicy = Intent(this@QRscreenActivity, jp.gr.java_conf.sora.qrcodereader.WebViewActivity::class.java)
-                startActivity(intentPrivacyPolicy)
-                finish()
+                val intent = Intent(this, WebViewActivity::class.java)
+                startActivity(intent)
                 return true
             }
             // 戻るボタン
             android.R.id.home -> {
-                val i = Intent(this, jp.gr.java_conf.sora.qrcodereader.CaptureActivity::class.java)
-                startActivity(i)
+                val intent = Intent(this, QRScanActivity::class.java)
+                startActivity(intent)
                 finish()
                 return true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
         }
     }
 
-    /**
-     * MethodName : onKeyDown
-     * Summary    : バックキータップ時に画面遷移する
-     */
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // Log.d(TAG,"onKeyDown Start");
-            // 遷移先画面をセット
-            val i = Intent(this, jp.gr.java_conf.sora.qrcodereader.CaptureActivity::class.java)
-            startActivity(i)
-            finish()
-            // Log.d(TAG,"onKeyDown Success");
-            return true
-        }
-        // Log.d(TAG,"onKeyDown Failed");
-        return false
+    override fun onBackPressed() {
+        val intent = Intent(this, QRScanActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     companion object {
-        private val TAG = QRscreenActivity::class.java.simpleName
+        // 読み取り結果のキー
+        private const val INTENT_EXTRA_SCAN_STRING = "INTENT_EXTRA_SCAN_STRING"
+        // DB登録処理実行のフラグ
+        private const val INTENT_EXTRA_SAVE_FLG = "INTENT_EXTRA_SAVE_FLG"
     }
 }

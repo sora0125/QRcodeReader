@@ -9,8 +9,6 @@
         android:id="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="47dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:theme="@style/ToolBarTheme"
         android:minHeight="?android:attr/actionBarSize"
         android:background="@color/colorAccent"/>

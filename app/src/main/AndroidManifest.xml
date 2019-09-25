@@ -17,12 +17,12 @@
             android:value="ca-app-pub-7596372753757478~1730192643"/>
 
         <activity
-            android:name=".QRscreenActivity"
+            android:name=".ScanResultActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_name"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name=".CaptureActivity"
+            android:name=".QRScanActivity"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/AppTheme"
@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CaptureActivityAnyOrientation"
+            android:name=".QRScanActivityAnyOrientation"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"

@@ -1,26 +1,23 @@
 package jp.gr.java_conf.sora.qrcodereader
 
-import android.content.Intent
 import android.database.Cursor
 import android.database.SQLException
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
-import android.view.KeyEvent
 import android.view.MenuItem
 import android.widget.ListView
 import android.widget.Toast
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 
-
+/**
+ * 履歴画面
+ */
 class HistoryActivity : AppCompatActivity() {
+    // 履歴リスト
     private  var historyList: ArrayList<HistoryData> = arrayListOf()
 
-    /**
-     *  MethodName : onCreate
-     *  Summary    : DBから履歴を取得し、リスト表示する
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
@@ -34,12 +31,6 @@ class HistoryActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         // 戻るボタンを表示
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-
-        // AdMobを設定
-        val mAdView = findViewById<AdView>(R.id.adView)
-        val adRequest = AdRequest.Builder().build()
-        mAdView.loadAd(adRequest)
 
         val helper = QRcodeDatabaseHelper(this)
         val db = helper.readableDatabase
@@ -76,52 +67,27 @@ class HistoryActivity : AppCompatActivity() {
         val adapter = HistoryAdapter(this, historyList)
         val list: ListView = findViewById(R.id.history_list)
         list.adapter = adapter
+
+        // AdMobを設定
+        val mAdView = findViewById<AdView>(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
     }
 
-    /**
-     *  MethodName : onKeyDown
-     *  Summary    : バックキータップ時に画面遷移する
-     */
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // 遷移フラグがあればスキャン画面へ遷移
-            val getIntent = this.intent
-            val scanStr = getIntent.getStringExtra("moveFlg")
-            if ("1" == scanStr) {
-                val intent = Intent(this@HistoryActivity, CaptureActivity::class.java)
-                startActivity(intent)
-            } else {
-                val intent = Intent(this@HistoryActivity, QRscreenActivity::class.java)
-                startActivity(intent)
-            }
-            finish()
-            return true
-        }
-        return false
-    }
 
     /**
-     *  MethodName : onOptionsItemSelected
-     *  Summary    : オプションメニューのリストタップ時の処理
+     * オプションメニューのリストタップ時の処理
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-        // 戻るボタン
+        return when (item.itemId) {
+            // 戻るボタン
             android.R.id.home -> {
-                // 遷移フラグがあればスキャン画面へ遷移
-                val getIntent = this.intent
-                val scanStr = getIntent.getStringExtra("moveFlg")
-                if ("1" == scanStr) {
-                    val intent = Intent(this@HistoryActivity, CaptureActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(this@HistoryActivity, QRscreenActivity::class.java)
-                    startActivity(intent)
-                }
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
         }
     }
 }

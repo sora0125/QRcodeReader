@@ -18,18 +18,16 @@ class HistoryAdapter(context: Context, private val historyList: List<HistoryData
     private val layoutInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     /**
-     *  MethodName : getView
-     *  Summary    : リストの項目のレイアウトを設定する
+     * リストの項目のレイアウトを設定する
      */
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         // ViewHolderパターン
-        var view = convertView!!
-        var holder = HistoryViewHolder()
+        val view: View = layoutInflater.inflate(android.R.layout.simple_list_item_2, parent, false)
+        val holder = HistoryViewHolder()
 
-        view = layoutInflater.inflate(android.R.layout.simple_list_item_2, parent, false)
-        holder.dateView = view?.findViewById(android.R.id.text1)
-        holder.urlView = view?.findViewById(android.R.id.text2)
-        view?.tag = holder
+        holder.dateView = view.findViewById(android.R.id.text1)
+        holder.urlView = view.findViewById(android.R.id.text2)
+        view.tag = holder
 
 
         // URLのリンク作成
@@ -48,17 +46,15 @@ class HistoryAdapter(context: Context, private val historyList: List<HistoryData
     }
 
     /**
-     *  MethodName : fromHtml
-     *  Summary    : htmlタグに変換する
+     * htmlタグに変換する
      */
     private fun fromHtml(url: String): Spanned {
-        val spanned: Spanned
-        // VersionがNougat（API Level 24）以上か
-        spanned = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        val spanned: Spanned = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             Html.fromHtml(url, Html.FROM_HTML_MODE_LEGACY)
         } else {
             HtmlCompat.fromHtml(url, HtmlCompat.FROM_HTML_MODE_COMPACT)
         }
+        // VersionがNougat（API Level 24）以上か
         return spanned
     }
 

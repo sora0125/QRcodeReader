@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/qrScreenBackground"
-    tools:context="jp.gr.java_conf.sora.qrcodereader.QRscreenActivity"
+    tools:context="jp.gr.java_conf.sora.qrcodereader.ScanResultActivity"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:theme="@style/ToolBarTheme"
         android:minHeight="?android:attr/actionBarSize"
-        android:background="@color/colorAccent"/>
+        android:background="@color/colorAccent" />
 
     <TextView
         android:id="@+id/textViewScannedData"
